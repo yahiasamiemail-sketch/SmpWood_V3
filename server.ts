@@ -161,14 +161,7 @@ async function startServer() {
   // Vite middleware & Static asset serving
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
-      server: { 
-        middlewareMode: true,
-        hmr: {
-          protocol: 'ws',
-          host: 'localhost',
-          port: 5173,
-        },
-      },
+      server: { middlewareMode: true },
       appType: "spa",
     });
     app.use(vite.middlewares);
