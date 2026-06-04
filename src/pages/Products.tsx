@@ -41,9 +41,13 @@ export default function Products() {
       const formSection = document.getElementById('devis-form');
       if (formSection) {
         setTimeout(() => {
-          formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          // Force scroll on mobile devices
-          window.scrollTo({ top: formSection.offsetTop - 100, behavior: 'smooth' });
+          // Calculate the scroll position to center the form section vertically in the viewport
+          const elementRect = formSection.getBoundingClientRect();
+          const elementTop = window.pageYOffset + elementRect.top;
+          const windowHeight = window.innerHeight;
+          const scrollPosition = elementTop - (windowHeight / 2) + (elementRect.height / 2);
+          
+          window.scrollTo({ top: Math.max(0, scrollPosition), behavior: 'smooth' });
         }, 300);
       }
     }
