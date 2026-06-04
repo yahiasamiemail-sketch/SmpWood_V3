@@ -41,8 +41,10 @@ export default function Products() {
       const formSection = document.getElementById('devis-form');
       if (formSection) {
         setTimeout(() => {
-          formSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 100);
+          formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Force scroll on mobile devices
+          window.scrollTo({ top: formSection.offsetTop - 100, behavior: 'smooth' });
+        }, 300);
       }
     }
   }, [isSuccess]);
@@ -105,7 +107,7 @@ export default function Products() {
               </div>
             </div>
 
-            <div className="lg:col-span-3 relative">
+            <div className="lg:col-span-3 relative" id="devis-form">
               <div className="relative glass-card p-8 md:p-12 rounded-3xl md:rounded-[3rem] bg-white shadow-2xl border border-slate-100">
                 {isSuccess ? (
                   <div className="py-12 text-center space-y-6">

@@ -37,8 +37,10 @@ export default function Contact() {
       const formSection = document.getElementById('contact-form');
       if (formSection) {
         setTimeout(() => {
-          formSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 100);
+          formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Force scroll on mobile devices
+          window.scrollTo({ top: formSection.offsetTop - 100, behavior: 'smooth' });
+        }, 300);
       }
     }
   }, [isSuccess]);
