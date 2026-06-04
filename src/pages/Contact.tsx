@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
@@ -17,9 +17,34 @@ type FormData = {
 
 export default function Contact() {
   const { t } = useTranslation();
-  const { register, handleSubmit, formState: { errors, isSubmitSuccessful }, reset } = useForm<FormData>();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>();
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Check for success parameter in URL on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('success') === 'true') {
+      setIsSuccess(true);
+      // Remove the query parameter from URL without reloading
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
+
+  // Scroll to form section when success is shown
+  useEffect(() => {
+    if (isSuccess) {
+      const formSection = document.getElementById('contact-form');
+      if (formSection) {
+        setTimeout(() => {
+          formSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+    }
+  }, [isSuccess]);
 
   const onSubmit = async (data: FormData) => {
+    setIsLoading(true);
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
@@ -27,10 +52,14 @@ export default function Contact() {
         body: JSON.stringify(data),
       });
       if (response.ok) {
-        // Form handled by react-hook-form isSubmitSuccessful
+        reset();
+        // Redirect to same page with success parameter
+        window.location.href = window.location.pathname + '?success=true';
       }
     } catch (error) {
       console.error("Failed to submit form", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -134,17 +163,24 @@ export default function Contact() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               className="lg:col-span-7"
+              id="contact-form"
             >
               <div className="relative">
                 <div className="absolute -top-10 -left-10 w-24 h-24 bg-smp-green/10 blur-[40px] rounded-full" />
               
-                {isSubmitSuccessful ? (
+                {isSuccess ? (
                   <div className="bg-white border border-slate-100 p-10 md:p-20 rounded-3xl text-center flex flex-col items-center justify-center min-h-[600px] shadow-premium">
                     <div className="w-24 h-24 bg-smp-green rounded-full flex items-center justify-center text-white mb-10 shadow-xl shadow-smp-green/30 animate-bounce-slow">
                       <Check size={48} />
                     </div>
                     <h3 className="text-3xl font-black text-smp-navy uppercase mb-4 not-italic">{t('contact.form_success')}</h3>
                     <p className="text-slate-500 font-serif">Nous reviendrons vers vous sous 24h.</p>
+                    <button 
+                      onClick={() => setIsSuccess(false)} 
+                      className="mt-10 px-8 py-3 bg-smp-green text-white rounded-xl font-bold hover:bg-smp-green/90 transition-all"
+                    >
+                      Envoyer un autre message
+                    </button>
                   </div>
                 ) : (
                   <div className="glass-card p-8 md:p-16 rounded-3xl bg-white border border-slate-100 shadow-premium">
@@ -220,10 +256,11 @@ export default function Contact() {
 
                       <button 
                         type="submit" 
-                        className="group relative w-full overflow-hidden rounded-2xl bg-smp-navy px-8 py-5 text-xs font-black uppercase tracking-[0.3em] text-white shadow-2xl transition-all hover:bg-smp-navy/90 hover:scale-[1.02] active:scale-95 not-italic"
+                        disabled={isLoading}
+                        className="group relative w-full overflow-hidden rounded-2xl bg-smp-navy px-8 py-5 text-xs font-black uppercase tracking-[0.3em] text-white shadow-2xl transition-all hover:bg-smp-navy/90 hover:scale-[1.02] active:scale-95 not-italic disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <div className="relative z-10 flex items-center justify-center gap-4">
-                          <span>{t('contact.form_submit')}</span>
+                          <span>{isLoading ? 'Envoi en cours...' : t('contact.form_submit')}</span>
                           <Send size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                         </div>
                       </button>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
@@ -21,9 +21,34 @@ type FormData = {
 
 export default function Products() {
   const { t } = useTranslation();
-  const { register, handleSubmit, formState: { errors, isSubmitSuccessful }, reset } = useForm<FormData>();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>();
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Check for success parameter in URL on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('success') === 'true') {
+      setIsSuccess(true);
+      // Remove the query parameter from URL without reloading
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
+
+  // Scroll to form section when success is shown
+  useEffect(() => {
+    if (isSuccess) {
+      const formSection = document.getElementById('devis-form');
+      if (formSection) {
+        setTimeout(() => {
+          formSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+    }
+  }, [isSuccess]);
 
   const onSubmit = async (data: FormData) => {
+    setIsLoading(true);
     try {
       const response = await fetch('/api/quote', {
         method: 'POST',
@@ -31,10 +56,14 @@ export default function Products() {
         body: JSON.stringify(data),
       });
       if (response.ok) {
-        // Let user see success message
+        reset();
+        // Redirect to same page with success parameter
+        window.location.href = window.location.pathname + '?success=true';
       }
     } catch (error) {
       console.error('Failed to submit quote request', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -78,13 +107,19 @@ export default function Products() {
 
             <div className="lg:col-span-3 relative">
               <div className="relative glass-card p-8 md:p-12 rounded-3xl md:rounded-[3rem] bg-white shadow-2xl border border-slate-100">
-                {isSubmitSuccessful ? (
+                {isSuccess ? (
                   <div className="py-12 text-center space-y-6">
                     <div className="w-20 h-20 bg-smp-green rounded-full flex items-center justify-center mx-auto text-white shadow-xl shadow-smp-green/30">
                       <Check size={40} />
                     </div>
                     <h3 className="text-2xl font-black uppercase not-italic text-smp-navy">C'est Envoyé !</h3>
                     <p className="text-slate-600 not-italic">{t('products.form_success')}</p>
+                    <button 
+                      onClick={() => setIsSuccess(false)} 
+                      className="mt-6 px-8 py-3 bg-smp-green text-white rounded-xl font-bold hover:bg-smp-green/90 transition-all"
+                    >
+                      Envoyer une autre demande
+                    </button>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -135,8 +170,12 @@ export default function Products() {
                       <label htmlFor="captcha" className="text-[10px] font-bold text-slate-500 uppercase tracking-wider not-italic">Je confirme ma demande.</label>
                     </div>
 
-                    <button type="submit" className="w-full py-5 bg-smp-navy text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-smp-green transition-all shadow-xl shadow-smp-navy/20">
-                      {t('products.form_submit')}
+                    <button 
+                      type="submit" 
+                      disabled={isLoading}
+                      className="w-full py-5 bg-smp-navy text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-smp-green transition-all shadow-xl shadow-smp-navy/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isLoading ? 'Envoi en cours...' : t('products.form_submit')}
                     </button>
                   </form>
                 )}
