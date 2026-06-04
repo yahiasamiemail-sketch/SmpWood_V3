@@ -50,11 +50,14 @@ async function startServer() {
       const finalPhone = telephone || "";
       const finalMessage = message;
 
+      console.log("[v0] Contact form received:", { finalName, finalEmail, finalCompany, finalPhone });
+
       if (!finalName || !finalEmail || !finalMessage) {
         return res.status(400).json({ error: "Missing required fields: nom/name, email, and message are required." });
       }
 
       const resend = getResend();
+      console.log("[v0] Resend client initialized, attempting to send email...");
 
       const data = await resend.emails.send({
         from: "SMP France <contact@smpwood.fr>",
@@ -73,9 +76,11 @@ async function startServer() {
         `,
       });
 
+      console.log("[v0] Email sent successfully:", data);
       res.json({ success: true, data });
     } catch (error: any) {
-      console.error("Error sending contact email with Resend:", error);
+      console.error("[v0] Error sending contact email with Resend:", error.message);
+      console.error("[v0] Full error:", error);
       res.status(500).json({
         error: error.message || "Failed to send email. Please verify if RESEND_API_KEY is properly set up.",
       });
