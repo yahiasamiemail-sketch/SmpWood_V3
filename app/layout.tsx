@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
@@ -8,7 +8,12 @@ const geistMono = Geist_Mono({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'SMP Wood - Négoce et Distribution de Granulés de Bois',
   description: 'Leader français du négoce et de la distribution de granulés de bois pour le chauffage domestique.',
-  viewport: 'width=device-width, initial-scale=1, theme-color=#003d82',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#003d82',
 };
 
 export default function RootLayout({
