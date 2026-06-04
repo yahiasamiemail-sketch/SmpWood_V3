@@ -6,7 +6,7 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-white text-slate-900;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -28,11 +28,11 @@
   }
 
   .btn-primary {
-    @apply bg-primary text-white hover:bg-opacity-90;
+    @apply bg-blue-600 text-white hover:bg-blue-700;
   }
 
   .btn-secondary {
-    @apply bg-secondary text-white hover:bg-opacity-90;
+    @apply bg-slate-600 text-white hover:bg-slate-700;
   }
 
   .container-custom {
@@ -41,6 +41,10 @@
 
   .section {
     @apply py-16 sm:py-24;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-md;
   }
 }
 
@@ -51,5 +55,5 @@ html {
 
 /* Selection color */
 ::selection {
-  @apply bg-primary text-white;
+  @apply bg-blue-600 text-white;
 }
