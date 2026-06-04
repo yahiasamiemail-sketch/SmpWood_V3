@@ -41,14 +41,8 @@ export default function Products() {
       const formSection = document.getElementById('devis-form');
       if (formSection) {
         setTimeout(() => {
-          // Calculate the scroll position to center the form section vertically in the viewport
-          const elementRect = formSection.getBoundingClientRect();
-          const elementTop = window.pageYOffset + elementRect.top;
-          const windowHeight = window.innerHeight;
-          const scrollPosition = elementTop - (windowHeight / 2) + (elementRect.height / 2);
-          
-          window.scrollTo({ top: Math.max(0, scrollPosition), behavior: 'smooth' });
-        }, 300);
+          formSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 500);
       }
     }
   }, [isSuccess]);
