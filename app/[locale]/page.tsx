@@ -1,15 +1,16 @@
 import { notFound } from "next/navigation";
 import { getRequestConfig } from "next-intl/server";
 
-export async function generateMetadata({ params }: { params: { locale: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   return {
     title: "SMP France - Négoce et Distribution de Granulés de Bois",
     description: "SMP France: Leader in wood pellet distribution and trading",
   };
 }
 
-export default async function Page({ params }: { params: { locale: string } }) {
-  const locale = params.locale;
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
 
   // Validate locale
   if (!["en", "fr"].includes(locale)) {
