@@ -1,0 +1,14 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "functions": {
+    "api/contact.ts": {
+      "memory": 1024,
+      "maxDuration": 10
+    },
+    "api/quote.ts": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  }
+}
