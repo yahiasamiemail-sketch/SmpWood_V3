@@ -173,6 +173,8 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
+    // IMPORTANT: Wildcard route must come AFTER all API routes
+    // Otherwise it will catch /api/* requests and return index.html instead
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
     });
