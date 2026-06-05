@@ -231,21 +231,21 @@ export default function Home() {
                 title: t('home.products_sac_title'), 
                 icon: <Package />, 
                 color: 'bg-smp-green',
-                image: '/images/granules-sac.jpg'
+                image: '/images/palette-15kg.jpeg'
               },
               { 
                 id: 'bigbag', 
                 title: t('home.products_bigbag_title'), 
                 icon: <Fuel />, 
                 color: 'bg-smp-blue',
-                image: '/images/1-5-Ton-Jumbo-Bags-FIBC-Big-Bag-for-Cement-Gravel-Urea-Agriculture-Feed-Fertilizer-Urea-Chemcial-Packing.webp'
+                image: '/images/big-bags.webp'
               },
               { 
                 id: 'vrac', 
                 title: t('home.products_vrac_title'), 
                 icon: <Truck />, 
                 color: 'bg-smp-navy',
-                image: '/images/GRANULESENVRACjpg_65fc621eeeacf.jpg'
+                image: '/images/granules-vrac.jpg'
               }
             ].map((prod, i) => (
               <motion.div
