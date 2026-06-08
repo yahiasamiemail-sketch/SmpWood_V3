@@ -9,5 +9,21 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Start of Crisp Chat Script -->
+    <script type="text/javascript">
+      window.$crisp = [];
+      window.CRISP_WEBSITE_ID = "e53c91b9-2ce0-432a-b127-8359c23c974a";
+      // Force la langue du widget en français
+      window.CRISP_RUNTIME_CONFIG = { locale: "fr" };
+      (function () {
+        d = document;
+        s = d.createElement("script");
+        s.src = "https://client.crisp.chat/l.js";
+        s.async = 1;
+        d.getElementsByTagName("head")[0].appendChild(s);
+      })();
+    </script>
+    <!-- End of Crisp Chat Script -->
   </body>
 </html>
